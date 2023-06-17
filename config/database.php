@@ -93,6 +93,48 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'users' => [
+            'driver' => env('DB_DRIVER'),
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
+            'database' => env('DB_DATABASE'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
+        'pif_sbb_qa' => [
+            'driver' => env('PIFSBBQA_DB_DRIVER'),
+            'host' => env('PIFSBBQA_DB_HOST'),
+            'port' => env('PIFSBBQA_DB_PORT'),
+            'database' => env('PIFSBBQA_DB_DATABASE'),
+            'username' => env('PIFSBBQA_DB_USERNAME'),
+            'password' => env('PIFSBBQA_DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
+        'pif_sbb' => [
+            'driver' => env('PIFSBB_DB_DRIVER'),
+            'host' => env('PIFSBB_DB_HOST'),
+            'port' => env('PIFSBB_DB_PORT'),
+            'database' => env('PIFSBB_DB_DATABASE'),
+            'username' => env('PIFSBB_DB_USERNAME'),
+            'password' => env('PIFSBB_DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],        
+
     ],
 
     /*
