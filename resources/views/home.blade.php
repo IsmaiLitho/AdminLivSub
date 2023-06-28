@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <!--<link href="assets/img/favicon.png" rel="icon">-->
   <!--<link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">--->
 
   <!-- Google Fonts -->
@@ -28,6 +28,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css/style.css')}}" rel="stylesheet">
+
+  <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
 
 </head>
 
@@ -50,18 +52,25 @@
                     <p class="text-center small">Para continuar, por favor seleccione la tienda a la que desea ingresar</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" method="POST" action="{{ route('index') }}">
+                  <form class="row g-3 needs-validation" method="POST" action="{{ route('seleccionar-tienda') }}">
                     @csrf
                     <div class="col-12">
                       <div class="form-check">
-                        <input class="form-check-input" type="radio" name="tienda" id="tienda" value="Liverpool">
-                        <label class="form-check-label">Liverpool</label>
+                        <input class="form-check-input mt-4 @error('password') is-invalid @enderror" type="radio" name="tienda" id="liv" value="Liverpool">
+                        <div id="sec_liverpool" class="p-2 d-flex flex-column align-items-center justify-content-center" style="background-color: #e10098;">
+                          <img src="{{ asset('assets/img/logo_liverpool.svg') }}" alt="Liverpool">
+                        </div>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input" type="radio" name="tienda" id="tienda" value="Suburbia">
-                        <label class="form-check-label">Suburbia</label>
+                        <input class="form-check-input mt-4 @error('password') is-invalid @enderror" type="radio" name="tienda" id="sbb" value="Suburbia">
+                        <div id="sec_suburbia" class="p-2 d-flex flex-column align-items-center justify-content-center" style="background-color: #552166;">                          
+                          <img src="{{ asset('assets/img/suburbia_2023.svg') }}" alt="Suburbia">                        
+                        </div>
                       </div>
-                    </div>                
+                    </div>
+                    @error('tienda')
+                      <p class="text text-danger">{{ $message }}</p>
+                    @enderror
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Ingresar</button>
@@ -95,6 +104,20 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js')}}"></script>
+
+  <script>
+    $('input[name=tienda]').on('change', function() {
+        tienda = $(this).val();
+        console.log(tienda);
+        if (tienda == 'Liverpool') {
+            $('#sec_liverpool').addClass('border border-5 border-primary mb-2 rounded');            
+            $('#sec_suburbia').removeClass('border border-5 border-primary mb-2 rounded');
+        } else {
+            $('#sec_liverpool').removeClass('border border-5 border-primary mb-2 rounded');            
+            $('#sec_suburbia').addClass('border border-5 border-primary mb-2 rounded');
+        }
+    });
+  </script>
 
 </body>
 

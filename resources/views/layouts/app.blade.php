@@ -10,8 +10,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{{ asset('assets/img/logo_clubasistencia.png')}}" rel="icon">
-    <link href="{{ asset('assets/img/logo_clubasistencia.png')}}" rel="apple-touch-icon">
+    {{---<link href="{{ asset('assets/img/logo_clubasistencia.png')}}" rel="icon">---}}
+    {{---<link href="{{ asset('assets/img/logo_clubasistencia.png')}}" rel="apple-touch-icon">---}}
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -24,10 +24,10 @@
     <link href="{{ asset('assets/vendor/quill/quill.snow.css')}}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/quill/quill.bubble.css')}}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/remixicon/remixicon.css')}}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/simple-datatables/style.css')}}" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css')}}" rel="stylesheet">
+    <link href="{{ asset('assets/css/jquery.dataTables.min.css')}}" rel="stylesheet"/>
     <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
 </head>
 
@@ -36,9 +36,9 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
-            <a href="{{route('home')}}" class="logo d-flex align-items-center">                
+            <div class="logo d-flex align-items-center">                
                 <span class="d-none d-lg-block">{{ Auth::user()->roles }}</span>
-            </a>
+            </div>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div>
 
@@ -46,7 +46,7 @@
             <ul class="d-flex align-items-center">
                 <li class="nav-item dropdown pe-3">                    
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <i class="ri-user-3-fill"></i>
+                        <i class="bx bxs-user-circle" style="font-size: 2rem; color: {{ Auth::user()->color }}"></i>
                         <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -70,7 +70,11 @@
 
     <aside id="sidebar" class="sidebar">
 
-        <center><img src="{{ asset('assets/img/logo_clubasistencia.png')}}" width="120" height="60"></center><br>
+        <center>
+            <div class="p-2 d-flex flex-column align-items-center justify-content-center" style="background-color: {{ Auth::user()->color }}">
+                <img src="{{ asset('assets/img/'.Auth::user()->logo) }}" width="120" height="40">
+            </div>
+        </center><br>
 
         <ul class="sidebar-nav" id="sidebar-nav">
 
@@ -80,40 +84,24 @@
                     <span>Inicio</span>
                 </a>
             </li>
-            <!--<li class="nav-item">
-                {{----<a class="nav-link collapsed" href="{{ route('aprobarCasView') }}">---}}
-                    <i class="bi bi-house-fill"></i>
-                    <span>Aprobar CAS</span>
-                </a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bx bxs-dashboard"></i><span>Proyectos</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="forms-elements.html">
-                            <i class="bi bi-circle"></i><span>Form Elements</span>
+                        <a href="{{ url(Auth::user()->tienda.'/pc') }}">
+                            <i class="bi bi-circle"></i><span>Protección Celular</span>
                         </a>
                     </li>
                     <li>
                         <a href="forms-layouts.html">
-                            <i class="bi bi-circle"></i><span>Form Layouts</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="forms-editors.html">
-                            <i class="bi bi-circle"></i><span>Form Editors</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="forms-validation.html">
-                            <i class="bi bi-circle"></i><span>Form Validation</span>
+                            <i class="bi bi-circle"></i><span>Protección Integral Familiar</span>
                         </a>
                     </li>
                 </ul>
-            </li>--->
+            </li>
         </ul>
 
     </aside>
@@ -140,11 +128,12 @@
     <script src="{{ asset('assets/vendor/chart.js/chart.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/echarts/echarts.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/quill/quill.min.js')}}"></script>
-    <script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js')}}"></script>
     <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/php-email-form/validate.js')}}"></script>
 
     <script src="{{ asset('assets/js/main.js')}}"></script>
+
+    @yield('scripts')
 
 </body>
 

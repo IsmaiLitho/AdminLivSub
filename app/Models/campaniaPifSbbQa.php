@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class campaniaSbb extends Model
+class campaniaPifSbbQa extends Model
 {
     use HasFactory;
-    protected $connection = 'pif_sbb';
+    protected $connection = 'pif_sbb_qa';
     protected $table = 'campanias';
     protected $fillable = [
         'bannerPromoActivo',
