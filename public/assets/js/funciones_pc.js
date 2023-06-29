@@ -1,6 +1,6 @@
 
-$('#footer').on('change', function() {            
-    let footer = $('#footer').is(':checked');
+$('#footer_check').on('change', function() {            
+    let footer = $('#footer_check').is(':checked');
     let fechain = $('#fechain').val(); 
     let fechafin = $('#fechafin').val();
     let check = true;
@@ -10,14 +10,14 @@ $('#footer').on('change', function() {
         $('#fechain').addClass('is-invalid');
         $('#sec_col_fechain').append(`<p class="text-danger">La fecha de finalización es requerida</p>`);
         check = false;
-        $('#footer').prop('checked', false);
+        $('#footer_check').prop('checked', false);
     }
 
     if (fechafin == '') {
         $('#fechafin').addClass('is-invalid');
         $('#sec_col_fechafin').append(`<p class="text-danger">La fecha de finalización es requerida</p>`);
         check = false;
-        $('#footer').prop('checked', false);
+        $('#footer_check').prop('checked', false);
     }
 
     if (check) {

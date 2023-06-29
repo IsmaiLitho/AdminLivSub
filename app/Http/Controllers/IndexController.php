@@ -29,7 +29,7 @@ class IndexController extends Controller
                 break;
         }
 
-        return redirect('/dashboard/'.$user->tienda);
+        return redirect($user->tienda.'/dashboard/');
     }
 
     public function dashboard() {

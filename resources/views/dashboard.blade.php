@@ -20,7 +20,7 @@
             		</a>
 		        </div>
 		        <div class="col-xxl-4 col-md-6">
-            		<a href="">
+            		<a href="{{ url(Auth::user()->tienda.'/pif') }}">
 		                <div class="card info-card">
 		                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
 		                        <h5 class="card-title">Protección Integral Familiar</h5>

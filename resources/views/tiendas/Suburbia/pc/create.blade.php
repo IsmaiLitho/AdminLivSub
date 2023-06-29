@@ -98,7 +98,7 @@
                                     <div class="row g-3" id="sec_tc">
                                         <div class="col-md-2" id="sec_check_tc">
                                             <label class="form-label">Activar términos y condiciones:</label>
-                                            <input type="checkbox" name="footer" id="footer" class="form-check-input mt-3">
+                                            <input type="checkbox" name="footer" id="footer_check" class="form-check-input mt-2">
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@
             fechafin:'',
             check:false,
         };
-        verifyTerminos(data);
+        //verifyTerminos(data);/
     </script>
     <script src="{{ asset('assets/js/moment.js')}}"></script>
     <script src="{{ asset('assets/js/funciones_pc.js')}}"></script>

@@ -3,7 +3,7 @@
 @section('content')
 
 	<div class="pagetitle">
-        <h1>Protección Celular Suburbia</h1>
+        <h1>Protección Integral Familiar Suburbia</h1>
     </div>
 
     <section class="section">
@@ -12,31 +12,31 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Editar campaña</h5>
-                        <form method="POST" action="{{ url('Suburbia/pc/actualizar-campania') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ url('Suburbia/pif/actualizar-campania') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3">
                                 <div class="col-md-12" id="sec_nombre">
                                     <label class="form-label">Nombre:</label>
                                     <input type="text" name="id" id="id" class="form-control" value="{{ $campania->id }}" hidden>
-                                    <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $campania->nombre }}">
+                                    <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $campania->promotionName }}">
                                 </div>
                                 <div class="col-md-12">
                                     <div class="row g-3" id="sec_fechain">
                                         <div class="col-md-4" id="sec_col_fechain">
                                             <label class="form-label">Fecha de publicación:</label>
-                                            <input type="date" name="fechain" class="form-control @error('fechain') is-invalid @enderror" id="fechain" value="{{ $campania->desde }}">
+                                            <input type="date" name="fechain" class="form-control @error('fechain') is-invalid @enderror" id="fechain" value="{{ date('Y-m-d',strtotime($campania->desde)) }}">
                                             @error('fechain')
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
                                         </div>
                                         <div class="col-md-2" id="sec_check_hora_in">
                                             <label class="form-check-label">Establecer hora de publición:</label><br>
-                                            <input type="checkbox" name="check_hora_in" id="check_hora_in" class="form-check-input mt-3" {{ ($campania->horaActivaDesde == 1) ? 'checked' : '' }}>
+                                            <input type="checkbox" name="check_hora_in" id="check_hora_in" class="form-check-input mt-3" {{ (date('H:i:s',strtotime($campania->desde)) !== '00:00:00') ? 'checked' : '' }}>
                                         </div>
-                                        @if($campania->horaActivaDesde == 1)
+                                        @if(date('H:i:s',strtotime($campania->desde)) !== '00:00:00')
                                             <div class="col-md-4" id="sec_hora_in">
                                                 <label class="form-label">Hora de publición:</label>
-                                                <input type="time" name="hora_in" id="hora_in" class="form-control" value="{{ $campania->horaDesde }}">
+                                                <input type="time" name="hora_in" id="hora_in" class="form-control" value="{{ date('H:i:s',strtotime($campania->desde)) }}">
                                             </div>
                                         @endif
                                     </div>
@@ -45,16 +45,16 @@
                                     <div class="row g-3" id="sec_fechafin">
                                         <div class="col-md-4" id="sec_col_fechafin">
                                             <label class="form-label">Fecha de finalización:</label>
-                                            <input type="date" name="fechafin" class="form-control @error('fechafin') is-invalid @enderror" id="fechafin" value="{{ $campania->hasta }}">
+                                            <input type="date" name="fechafin" class="form-control @error('fechafin') is-invalid @enderror" id="fechafin" value="{{ date('Y-m-d',strtotime($campania->hasta)) }}">
                                             @error('fechafin')
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
                                         </div>
                                         <div class="col-md-2" id="sec_check_hora_fin">
                                             <label class="form-check-label">Establecer hora de finalización:</label><br>
-                                            <input type="checkbox" name="check_hora_fin" id="check_hora_fin" class="form-check-input mt-3" {{ ($campania->horaActivaHasta == 1) ? 'checked' : '' }}>
+                                            <input type="checkbox" name="check_hora_fin" id="check_hora_fin" class="form-check-input mt-3" {{ (date('H:i:s',strtotime($campania->hasta)) !== '23:59:59') ? 'checked' : '' }}>
                                         </div>
-                                        @if($campania->horaActivaHasta == 1)
+                                        @if(date('H:i:s',strtotime($campania->hasta)) !== '23:59:59')
                                             <div class="col-md-4" id="sec_hora_fin">
                                                 <label class="form-label">Hora de finalización:</label>
                                                 <input type="time" name="hora_fin" id="hora_fin" class="form-control" value="{{ $campania->horaHasta }}">
@@ -80,7 +80,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <h5 class="card-title">Promoción de tarjetas</h5>
+                            <!---<h5 class="card-title">Promoción de tarjetas</h5>
                             <div class="row g-3">                                
                                 <div class="col-md-6" id="sec_col_cat">
                                     <label class="form-label">Tarjetas Suburbia:</label>
@@ -106,16 +106,16 @@
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
-                            </div>                           
+                            </div>-->                           
                             <h5 class="card-title">Términos y condiciones</h5>
                             <div class="row g-3">
                                 <div class="col-md-12">                                    
                                     <div class="row g-3" id="sec_tc">
                                         <div class="col-md-2" id="sec_check_tc">
                                             <label class="form-label">Activar términos y condiciones:</label>
-                                            <input type="checkbox" name="footer" id="footer_check" class="form-check-input mt-2" {{ ($campania->footer == 1) ? 'checked' : '' }}>
+                                            <input type="checkbox" name="footer" id="footer_check" class="form-check-input mt-2" {{ ($campania->footerActivo == 1) ? 'checked' : '' }}>
                                         </div>
-                                        @if($campania->footer == 1)
+                                        @if($campania->footerActivo == 1)
                                             <div class="col-md-5" id="sec_footerLeyenda">
                                                 <label class="form-label">Leyenda de términos y condiciones:</label>
                                                 <input type="text" name="footerLeyenda" id="footerLeyenda" class="form-control" value="{{ $campania->footerLeyenda }}">

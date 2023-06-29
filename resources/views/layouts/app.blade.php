@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>{{ Auth::user()->roles }}</title>
+    <title>Admin Suburbia y Liverpool</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -80,6 +80,13 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('home') }}">
+                    <i class="ri-handbag-fill"></i>
+                    <span>Tiendas</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url(Auth::user()->tienda.'/dashboard/') }}">
                     <i class="bi bi-house-fill"></i>
                     <span>Inicio</span>
                 </a>
@@ -96,7 +103,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="forms-layouts.html">
+                        <a href="{{ url(Auth::user()->tienda.'/pif') }}">
                             <i class="bi bi-circle"></i><span>Protección Integral Familiar</span>
                         </a>
                     </li>

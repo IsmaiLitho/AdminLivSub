@@ -23,4 +23,6 @@ class campaniaPifSbb extends Model
         'eventLabel',
         'promotionName',
     ];
+
+    public $timestamps = false;
 }
