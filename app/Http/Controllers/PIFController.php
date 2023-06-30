@@ -11,12 +11,13 @@ use Session;
 
 class PIFController extends Controller
 {
-    protected $fecha, $fecha_registro;
+    protected $fecha, $fecha_registro, $url_aws;
 
     public function __construct(){
         date_default_timezone_set("America/Mexico_City");
         $this->fecha = date("Y-m-d H:i:s");
         $this->fecha_registro = date("Y-m-d H:i:s",strtotime($this->fecha."-1 hour"));
+        $this->url_aws = config('url_config.aws_url');
     }
 
     public function index($tienda){
@@ -70,7 +71,19 @@ class PIFController extends Controller
         
         $user = \Auth()->User();
         $fechain = ($r->check_hora_in == 'on') ? $r->fechain.' '.date("H:i:s",strtotime($r->hora_in)) : $r->fechain.' 00:00:00';
-        $fechafin = ($r->check_hora_fin == 'on') ? $r->fechafin.' '.date("H:i:s",strtotime($r->hora_fin)) : $r->fechafin.' 23:59:59';        
+        $fechafin = ($r->check_hora_fin == 'on') ? $r->fechafin.' '.date("H:i:s",strtotime($r->hora_fin)) : $r->fechafin.' 23:59:59';
+
+        $movil = \Storage::disk('s3')->put('Pif/'.$user->tienda.'/img',$r->file('bannerMovil'),'public');
+        $bannerMovil = $this->url_aws . $movil;
+
+        $web = \Storage::disk('s3')->put('Pif/'.$user->tienda.'/img',$r->file('bannerWeb'),'public');
+        $bannerWeb = $this->url_aws . $web;
+
+        $archivo_tc = '';
+        if ($r->hasFile('archivo_tc')) {
+            $tc = \Storage::disk('s3')->put('Pif/'.$user->tienda.'/pdf',$r->file('archivo_tc'),'public');
+            $archivo_tc = $this->url_aws . $tc;
+        }
 
         switch ($user->tienda) {
             case 'Suburbia':
@@ -80,11 +93,11 @@ class PIFController extends Controller
                     'hasta' => $fechafin,
                     //'mesesLiverpool' => $r->mesesLiverpool,
                     //'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => $bannerMovil,
+                    'bannerWeb' => $bannerWeb,
                     'footerActivo' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'footerArchivo' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'footerArchivo' => ($r->footer == 'on') ? $archivo_tc : null,
                 ]);
 
                 $prod = campaniaPifSbb::create([
@@ -93,11 +106,11 @@ class PIFController extends Controller
                     'hasta' => $fechafin,
                     //'mesesLiverpool' => $r->mesesLiverpool,
                     //'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => $bannerMovil,
+                    'bannerWeb' => $bannerWeb,
                     'footerActivo' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'footerArchivo' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'footerArchivo' => ($r->footer == 'on') ? $archivo_tc : null,
                 ]);
                 break;
         }
@@ -114,7 +127,7 @@ class PIFController extends Controller
                 $campania = campaniaPifSbb::find($id);
                 break;
         }
-        //return $campania;
+        
         return view('tiendas.'.$tienda.'.pif.edit',compact('campania'));
     }
 
@@ -132,7 +145,25 @@ class PIFController extends Controller
         $user = \Auth()->User();
         $fechain = ($r->check_hora_in == 'on') ? $r->fechain.' '.date("H:i:s",strtotime($r->hora_in)) : $r->fechain.' 00:00:00';
         $fechafin = ($r->check_hora_fin == 'on') ? $r->fechafin.' '.date("H:i:s",strtotime($r->hora_fin)) : $r->fechafin.' 23:59:59';
-        //return [$fechain,$fechafin];
+
+        $bannerMovil = '';
+        $bannerWeb = '';
+        $archivo_tc = '';
+        if ($r->hasFile('bannerMovil')) {
+            $movil = \Storage::disk('s3')->put('Pif/'.$user->tienda.'/img',$r->file('bannerMovil'),'public');
+            $bannerMovil = $this->url_aws . $movil;
+        }
+
+        if ($r->hasFile('bannerWeb')) {
+            $web = \Storage::disk('s3')->put('Pif/'.$user->tienda.'/img',$r->file('bannerWeb'),'public');
+            $bannerWeb = $this->url_aws . $web;
+        }
+
+        if ($r->hasFile('archivo_tc')) {
+            $tc = \Storage::disk('s3')->put('Pif/'.$user->tienda.'/pdf',$r->file('archivo_tc'),'public');
+            $archivo_tc = $this->url_aws . $tc;
+        }
+
         switch ($user->tienda) {
             case 'Suburbia':
                 $qa = campaniaPifSbbQa::find($r->id);
@@ -144,11 +175,11 @@ class PIFController extends Controller
                     'hasta' => $fechafin,
                     //'mesesLiverpool' => $r->mesesLiverpool,
                     //'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => ($bannerMovil == '') ? $qa->bannerMovil : $bannerMovil,
+                    'bannerWeb' => ($bannerWeb == '') ? $qa->bannerWeb : $bannerWeb,
                     'footerActivo' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'footerArchivo' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'footerArchivo' => ($r->footer == 'on') ? (($archivo_tc == '') ? $qa->archivo_tc : $bannerMovil) : null,
                 ]);
 
                 $prod->update([
@@ -157,11 +188,11 @@ class PIFController extends Controller
                     'hasta' => $fechafin,
                     //'mesesLiverpool' => $r->mesesLiverpool,
                     //'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => ($bannerMovil == '') ? $qa->bannerMovil : $bannerMovil,
+                    'bannerWeb' => ($bannerWeb == '') ? $qa->bannerWeb : $bannerWeb,
                     'footerActivo' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'footerArchivo' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'footerArchivo' => ($r->footer == 'on') ? (($archivo_tc == '') ? $qa->archivo_tc : $bannerMovil) : null,
                 ]);
                 break;
         }

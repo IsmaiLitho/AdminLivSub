@@ -66,14 +66,16 @@
                             <h5 class="card-title">Banners</h5>
                             <div class="row g-3">                                
                                 <div class="col-md-6" id="sec_col_cat">
-                                    <label class="form-label">Banner para Web:</label>
+                                    <label class="form-label">Banner para Web:</label><br>
+                                    <center><img src="{{ $campania->bannerMovil }}" width="350" height="150"></center>
                                     <input type="file" name="bannerMovil" id="bannerMovil" class="form-control @error('bannerMovil') is-invalid @enderror">
                                     @error('bannerMovil')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-md-6" id="sec_col_producto">
-                                    <label class="form-label">Banner para Movil:</label>
+                                    <label class="form-label">Banner para Movil:</label><br>
+                                    <center><img src="{{ $campania->bannerWeb }}" width="350" height="150"></center>
                                     <input type="file" name="bannerWeb" id="bannerWeb" class="form-control @error('bannerWeb') is-invalid @enderror">
                                     @error('bannerWeb')
                                         <p class="text-danger">{{ $message }}</p>

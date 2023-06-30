@@ -11,12 +11,13 @@ use Session;
 
 class ProtecionCelularController extends Controller
 {
-    protected $fecha, $fecha_registro;
+    protected $fecha, $fecha_registro, $url_aws;
 
     public function __construct(){
         date_default_timezone_set("America/Mexico_City");
         $this->fecha = date("Y-m-d H:i:s");
         $this->fecha_registro = date("Y-m-d H:i:s",strtotime($this->fecha."-1 hour"));
+        $this->url_aws = config('url_config.aws_url');
     }
 
     public function index($tienda){
@@ -74,6 +75,18 @@ class ProtecionCelularController extends Controller
 
         $user = \Auth()->User();
 
+        $movil = \Storage::disk('s3')->put('PC/'.$user->tienda.'/img',$r->file('bannerMovil'),'public');
+        $bannerMovil = $this->url_aws . $movil;
+
+        $web = \Storage::disk('s3')->put('PC/'.$user->tienda.'/img',$r->file('bannerWeb'),'public');
+        $bannerWeb = $this->url_aws . $web;
+        
+        $archivo_tc = '';
+        if ($r->hasFile('archivo_tc')) {
+            $tc = \Storage::disk('s3')->put('PC/'.$user->tienda.'/pdf',$r->file('archivo_tc'),'public');
+            $archivo_tc = $this->url_aws . $tc;
+        }
+
         switch ($user->tienda) {
             case 'Suburbia':
                 $qa = campaniaPCSbbQa::create([
@@ -87,11 +100,11 @@ class ProtecionCelularController extends Controller
                     'horaHasta' => ($r->check_hora_fin == 'on') ? $r->hora_fin : null,
                     'mesesLiverpool' => $r->mesesLiverpool,
                     'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => $bannerMovil,
+                    'bannerWeb' => $bannerWeb,
                     'footer' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? $archivo_tc : null,
                 ]);
 
                 $prod = campaniaPCSbb::create([
@@ -105,11 +118,11 @@ class ProtecionCelularController extends Controller
                     'horaHasta' => ($r->check_hora_fin == 'on') ? $r->hora_fin : null,
                     'mesesLiverpool' => $r->mesesLiverpool,
                     'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => $bannerMovil,
+                    'bannerWeb' => $bannerWeb,
                     'footer' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? $archivo_tc : null,
                 ]);
                 break;
         }
@@ -143,6 +156,24 @@ class ProtecionCelularController extends Controller
 
         $user = \Auth()->User();
 
+        $bannerMovil = '';
+        $bannerWeb = '';
+        $archivo_tc = '';
+        if ($r->hasFile('bannerMovil')) {
+            $movil = \Storage::disk('s3')->put('PC/'.$user->tienda.'/img',$r->file('bannerMovil'),'public');
+            $bannerMovil = $this->url_aws . $movil;
+        }
+
+        if ($r->hasFile('bannerWeb')) {
+            $web = \Storage::disk('s3')->put('PC/'.$user->tienda.'/img',$r->file('bannerWeb'),'public');
+            $bannerWeb = $this->url_aws . $web;
+        }
+
+        if ($r->hasFile('archivo_tc')) {
+            $tc = \Storage::disk('s3')->put('PC/'.$user->tienda.'/pdf',$r->file('archivo_tc'),'public');
+            $archivo_tc = $this->url_aws . $tc;
+        }
+
         switch ($user->tienda) {
             case 'Suburbia':
                 $qa = campaniaPCSbbQa::find($r->id);
@@ -158,11 +189,11 @@ class ProtecionCelularController extends Controller
                     'horaHasta' => ($r->check_hora_fin == 'on') ? $r->hora_fin : null,
                     'mesesLiverpool' => $r->mesesLiverpool,
                     'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => $bannerMovil,
+                    'bannerWeb' => $bannerWeb,
                     'footer' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? (($archivo_tc == '') ? $qa->archivo_tc : $bannerMovil) : null,
                 ]);
 
                 $prod->update([
@@ -175,11 +206,11 @@ class ProtecionCelularController extends Controller
                     'horaHasta' => ($r->check_hora_fin == 'on') ? $r->hora_fin : null,
                     'mesesLiverpool' => $r->mesesLiverpool,
                     'mesesExternas' => $r->mesesExternas,
-                    'bannerMovil' => $r->bannerMovil,
-                    'bannerWeb' => $r->bannerWeb,
+                    'bannerMovil' => $bannerMovil,
+                    'bannerWeb' => $bannerWeb,
                     'footer' => ($r->footer == 'on') ? 1 : 0,
                     'footerLeyenda' => ($r->footer == 'on') ? $r->footerLeyenda : null,
-                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? $r->archivo_tc : null,
+                    'archivoTerminosCondiciones' => ($r->footer == 'on') ? (($archivo_tc == '') ? $qa->archivo_tc : $bannerMovil) : null,
                 ]);
                 break;
         }
